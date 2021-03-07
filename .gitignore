@@ -3,3 +3,6 @@ node_modules
 obj
 bin
 *.log
+.*
+*.test.*
+/csharp/2020/days/*.csproj
