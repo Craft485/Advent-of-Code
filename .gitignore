@@ -6,3 +6,5 @@ bin
 .*
 *.test.*
 /csharp/2020/days/*.csproj
+# Temporary
+/csharp/*
