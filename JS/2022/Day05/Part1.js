@@ -7,50 +7,54 @@ const input = fs.readFileSync('./input.txt', { encoding: 'utf-8' })
 const initialStacks = input.split(`\r\n\r\n`)[0]
 console.log(initialStacks)
 const rules = input.split(`\r\n\r\n`)[1].split(`\r\n`)
-// console.log(rules)
+console.log(rules)
 const stacks = [ [], [], [], [], [], [], [], [], [] ]
 const rows = initialStacks.split('\r\n')
-// console.log(rows)
+console.log(rows)
 
 for (const row of rows) {
-  for (let i = 0; i < row.length; i += 4) {
-    const crate = row.substring(i, i + 4).trim().replaceAll(/(\[|\])/g, '')
-    if (!Number(crate) && Boolean(crate)) {
-      stacks[i / 4].push(crate)
+    for (let i = 0; i < row.length; i += 4) {
+        const crate = row.substring(i, i + 4).trim().replaceAll(/(\[|\])/g, '')
+        // If its not a number or an empty string add it to its stack
+        if (!Number(crate) && Boolean(crate)) {
+            stacks[i / 4].push(crate)
+        }
     }
-  }
 }
-// console.log(stacks[0][0])
-// Stacks were generated in reverse, correcting that here
-// for (const stack of stacks) {
-//   stack.reverse()
-// }
-// console.log('\n')
-// console.log(stacks[0][0])
+
+// Stacks were generated top down, so the crate at the first index is at the top of the column
+// It'll be easier later if this is reversed, where the top crate is at the end of the array
+for (const stack of stacks) {
+    stack.reverse()
+}
+
 for (const rule of rules) {
     const move = /move (\d)/.exec(rule)[1]
     const from = /from (\d)/.exec(rule)[1]
     const to = /to (\d)/.exec(rule)[1]
     // console.log('==============')
-    console.log(move)
-    console.log(from)
-    console.log(to)
-    console.log(stacks[from - 1].join(' '))
-    console.log(stacks[to - 1].join(' '))
+    console.log(`move: ${move}`)
+    console.log(`from: ${from}`)
+    console.log(`to: ${to}`)
+    console.log(`from column before: ${stacks[from - 1].join(' ')}`)
+    console.log(`to column after: ${stacks[to - 1].join(' ')}`)
     for (let i = 0; i < move; i++) {
-        stacks[to - 1].reverse().push(stacks[from - 1].shift() || '')
-        stacks[to - 1].reverse()
-        stacks[to - 1] = stacks[to - 1].filter(Boolean)
+        const element = stacks[from - 1].pop()
+        if (element) {
+            stacks[to - 1].push(element)
+        } else break
     }
-    console.log(stacks[from - 1].join('-'))
-    console.log(stacks[to - 1].join('-'))
+    // Array#filter(Boolean) will remove any possible empty strings since they will get read as false
+    stacks[to - 1] = stacks[to - 1].filter(Boolean)
+    console.log(`from column after: ${stacks[from - 1].join(' ')}`)
+    console.log(`to column after: ${stacks[to - 1].join(' ')}`)
     // console.log('==============')
-    // break
 }
 
 let topCrates = ''
 for (const stack of stacks) {
-    topCrates += stack[0] || ''
+    // The top crate is going to be the last element in the array
+    topCrates += stack[stack.length - 1] || ''
 }
 
 console.log(stacks)
