@@ -5,12 +5,9 @@ import fs from 'fs'
 const input = fs.readFileSync('./input.txt', { encoding: 'utf-8' })
 
 const initialStacks = input.split(`\r\n\r\n`)[0]
-// console.log(initialStacks)
 const rules = input.split(`\r\n\r\n`)[1].split(`\r\n`)
-// console.log(rules)
 const stacks = [ [], [], [], [], [], [], [], [], [] ]
 const rows = initialStacks.split('\r\n')
-// console.log(rows)
 
 for (const row of rows) {
     for (let i = 0; i < row.length; i += 4) {
@@ -34,11 +31,8 @@ for (const rule of rules) {
     const to = /to (\d)/.exec(rule)[1]
 
     const boxesToMove = stacks[from - 1].slice(-move)
-    console.log(boxesToMove)
-    stacks[to - 1].concat(boxesToMove)
-    console.log(stacks[to - 1])
-    stacks[from - 1] = stacks[from - 1].slice(0, stacks[from - 1].length - move)
-    console.log(stacks[from - 1])
+    stacks[to - 1] = stacks[to - 1].concat(boxesToMove)
+    stacks[from - 1] = stacks[from - 1].slice(0, -move)
 }
 
 let topCrates = ''
@@ -47,5 +41,4 @@ for (const stack of stacks) {
     topCrates += stack[stack.length - 1] || ''
 }
 
-console.log(stacks)
 console.log(topCrates)

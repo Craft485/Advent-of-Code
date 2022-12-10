@@ -5,12 +5,9 @@ import fs from 'fs'
 const input = fs.readFileSync('./input.txt', { encoding: 'utf-8' })
 
 const initialStacks = input.split(`\r\n\r\n`)[0]
-console.log(initialStacks)
 const rules = input.split(`\r\n\r\n`)[1].split(`\r\n`)
-console.log(rules)
 const stacks = [ [], [], [], [], [], [], [], [], [] ]
 const rows = initialStacks.split('\r\n')
-console.log(rows)
 
 for (const row of rows) {
     for (let i = 0; i < row.length; i += 4) {
@@ -32,12 +29,7 @@ for (const rule of rules) {
     const move = /move (\d+)/.exec(rule)[1]
     const from = /from (\d)/.exec(rule)[1]
     const to = /to (\d)/.exec(rule)[1]
-    // console.log('==============')
-    console.log(`move: ${move}`)
-    console.log(`from: ${from}`)
-    console.log(`to: ${to}`)
-    console.log(`from column before: ${stacks[from - 1].join(' ')}`)
-    console.log(`to column after: ${stacks[to - 1].join(' ')}`)
+
     for (let i = 0; i < move; i++) {
         const element = stacks[from - 1].pop()
         if (element) {
@@ -46,9 +38,6 @@ for (const rule of rules) {
     }
     // Array#filter(Boolean) will remove any possible empty strings since they will get read as false
     stacks[to - 1] = stacks[to - 1].filter(Boolean)
-    console.log(`from column after: ${stacks[from - 1].join(' ')}`)
-    console.log(`to column after: ${stacks[to - 1].join(' ')}`)
-    // console.log('==============')
 }
 
 let topCrates = ''
@@ -57,5 +46,4 @@ for (const stack of stacks) {
     topCrates += stack[stack.length - 1] || ''
 }
 
-console.log(stacks)
 console.log(topCrates)
