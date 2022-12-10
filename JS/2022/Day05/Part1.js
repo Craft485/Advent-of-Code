@@ -29,7 +29,7 @@ for (const stack of stacks) {
 }
 
 for (const rule of rules) {
-    const move = /move (\d)/.exec(rule)[1]
+    const move = /move (\d+)/.exec(rule)[1]
     const from = /from (\d)/.exec(rule)[1]
     const to = /to (\d)/.exec(rule)[1]
     // console.log('==============')
