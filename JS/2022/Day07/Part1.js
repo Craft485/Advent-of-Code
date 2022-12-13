@@ -2,18 +2,19 @@ import fs from 'fs'
 
 const input = fs.readFileSync('input.txt', { encoding: 'utf-8' })
 const lines  = input.split('\r\n')
-// Remove cd to /
+// Just for fun
+console.info(`1 | ${lines[0]}`)
+// Remove the first command where we cd to root/home
 lines.shift()
 
 const fileSystem = {}
-
 let parentDir = null
 let currentDir = fileSystem
 let path = ''
 
 for (let i = 0; i < lines.length; i++) {
     const line = lines[i]
-    console.log(`${i + 1} | ${line}`)
+    console.info(`${i + 2} | ${line}`)
     // If the line we are looking at is a command
     if (line.startsWith('$')) {
         const parts = line.split(' ')
@@ -26,30 +27,26 @@ for (let i = 0; i < lines.length; i++) {
                 // Remove currentDir from the path
                 dirsInPath.pop()
                 currentDir = parentDir
-                parentDir = dirsInPath.pop()
+                let systemReference = fileSystem
+                for (const dir of dirsInPath) systemReference = systemReference[dir] ? systemReference[dir] : fileSystem
+                parentDir = systemReference
                 // Update path
-                // doesn't work because currentDir is an object reference to somewhere within fileSystem
-                path = dirsInPath.join('/') + `${path.includes('/') ? '/' : ''}${currentDir}`
+                path = dirsInPath.join('/')
             } else {
                 parentDir = currentDir
-                path += `${path.includes('/') ? '/' : ''}${newDir}`
+                path += `${path.length > 0 ? '/' : ''}${newDir}`
                 // Update currentDir
                 const dirs = path.split('/')
-                console.log(path)
                 let reference = fileSystem
-                console.log(dirs)
-                for (const dir of dirs) {
-                    console.log(dir)
-                    console.log(reference['gqcclj'])
-                    reference = reference[dir]
-                }
+                for (const dir of dirs) reference = reference[dir]
                 currentDir = reference
             }
         } else if (parts[0] === 'ls') {
             // Look ahead and capture all the lines that don't begin with $
             const output = []
+            // Really shouldn't use lines#length here but not sure what else to use
             for (let n = 1; n < lines.length; n++) {
-                if (!lines[i + n].startsWith('$')) {
+                if (!lines[i + n]?.startsWith('$') && lines[i + n] !== undefined) {
                     output.push(lines[i + n])
                 } else break
             }
@@ -69,9 +66,7 @@ for (let i = 0; i < lines.length; i++) {
                     // We found a sub directory in the current directory
                     const dirName = parts[1]
                     // If its a new directory we haven't seen yet, initialize it 
-                    if (!currentDir[dirName]) {
-                        currentDir[dirName] = {}
-                    }
+                    if (!currentDir[dirName]) currentDir[dirName] = {}
                 }
             }
             if(!currentDir.sizeOfAllFilesInDir) Object.defineProperty(currentDir, 'sizeOfAllFilesInDir', { value: sizeOfAllFilesInDir, enumerable: false })
@@ -79,30 +74,27 @@ for (let i = 0; i < lines.length; i++) {
     }
 }
 
-// Try using a recursive function to search each directory to get their full size(including sub dirs)
+// Log the final system tree
+console.log(fileSystem)
+
 // dirSizesTotal will NOT be the size of root as dirs whose size is over 100 000 will not be included
 let dirSizesTotal = 0
-let sizeOfRoot = 0
 
 function recurse(dir) {
-    // return the size of this directory(just files) plus the size of any sub directories
+    // Return the size of this directory(just files) plus the size of any sub directories
     let finalSize = dir.sizeOfAllFilesInDir || 0
     for (const entry in dir) {
         if (typeof dir[entry] !== 'number') {
             const dirSize = recurse(dir[entry])
-            if (dirSize <= 100000) finalSize += dirSize
+            // For calculating the size of root
+            finalSize += dirSize
+            if (dirSize <= 100000) dirSizesTotal += dirSize
         }
     }
     return finalSize
 }
 
-// Loop done specifically for root, byproduct will also be the sum of the subdirs stored into dirSizesTotal
-for (const entry in fileSystem) {
-    sizeOfRoot += fileSystem.sizeOfAllFilesInDir
-    if (typeof fileSystem[entry] !== 'number') {
-        const size = recurse(fileSystem[entry])
-        sizeOfRoot += size
-    }
-}
+// Calculate the size of the root directory, byproduct will also be the sum of all directories with total size <= 100k stored into dirSizesTotal
+const sizeOfRoot = recurse(fileSystem)
 
 console.log(`dirSizesTotal(no root): ${dirSizesTotal}\nroot: ${sizeOfRoot}`)
