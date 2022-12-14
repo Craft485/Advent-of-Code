@@ -7,7 +7,7 @@ console.info(`1 | ${lines[0]}`)
 // Remove the first command where we cd to root/home
 lines.shift()
 
-const fileSystem = {}
+export const fileSystem = {}
 let parentDir = null
 let currentDir = fileSystem
 let path = ''
@@ -80,7 +80,7 @@ console.log(fileSystem)
 // dirSizesTotal will NOT be the size of root as dirs whose size is over 100 000 will not be included
 let dirSizesTotal = 0
 
-function recurse(dir) {
+export function recurse(dir) {
     // Return the size of this directory(just files) plus the size of any sub directories
     let finalSize = dir.sizeOfAllFilesInDir || 0
     for (const entry in dir) {
@@ -91,10 +91,10 @@ function recurse(dir) {
             if (dirSize <= 100000) dirSizesTotal += dirSize
         }
     }
+    Object.defineProperty(dir, 'dirSize', { value: finalSize, enumerable: false })
     return finalSize
 }
 
 // Calculate the size of the root directory, byproduct will also be the sum of all directories with total size <= 100k stored into dirSizesTotal
-const sizeOfRoot = recurse(fileSystem)
-
+export const sizeOfRoot = recurse(fileSystem)
 console.log(`dirSizesTotal(no root): ${dirSizesTotal}\nroot: ${sizeOfRoot}`)
