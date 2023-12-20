@@ -1,10 +1,5 @@
 import { readFile } from 'fs'
 
-const testCase1 = `
-0 3 6 9 12 15
-1 3 6 10 15 21
-10 13 16 21 30 45`
-
 readFile('input.txt', { encoding: 'utf-8' }, (err, inputData) => {
     if (err) throw err
 

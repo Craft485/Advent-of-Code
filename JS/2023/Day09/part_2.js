@@ -14,6 +14,5 @@ readFile('input.txt', { encoding: 'utf-8' }, (err, inputData) => {
         for (const sequence of sequences) temp.push(sequence[0])
         result[lineIndex] = eval(temp.join('-(') + new Array(temp.length - 1).fill(')').join(''))
     })
-    console.log(result)
     console.info(eval(result.join('+')))
 })
