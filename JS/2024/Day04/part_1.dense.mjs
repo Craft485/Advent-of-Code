@@ -1,0 +1,5 @@
+import { readFile } from 'fs/promises'
+
+const Main = async () => (await readFile('./input.txt', { encoding: 'utf-8' })).trim().replace(/\r/g, '').split('\n').reduce((total, line, i, lines) => total + line.split('').reduce((lineTotal, char, j) => lineTotal + (char === 'X' ? [ ['X', line[j + 1] || '', line[j + 2] || '', line[j + 3] || ''].join(''), ['X', line[j - 1] || '', line[j - 2] || '', line[j - 3] || ''].join(''), ['X', lines[i + 1]?.[j] || '', lines[i + 2]?.[j] || '', lines[i + 3]?.[j] || ''].join(''), ['X', lines[i - 1]?.[j] || '', lines[i - 2]?.[j] || '', lines[i - 3]?.[j] || ''].join(''), ['X', lines[i - 1]?.[j + 1] || '', lines[i - 2]?.[j + 2] || '', lines[i - 3]?.[j + 3] || ''].join(''), ['X', lines[i - 1]?.[j - 1] || '', lines[i - 2]?.[j - 2] || '', lines[i - 3]?.[j - 3] || ''].join(''), ['X', lines[i + 1]?.[j + 1] || '', lines[i + 2]?.[j + 2] || '', lines[i + 3]?.[j + 3] || ''].join(''), ['X', lines[i + 1]?.[j - 1] || '', lines[i + 2]?.[j - 2] || '', lines[i + 3]?.[j - 3] || ''].join('') ].filter(s => s === 'XMAS').length : 0), 0), 0)
+
+Main().then(console.log).catch(e => { throw e })
