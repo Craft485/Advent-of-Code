@@ -34,16 +34,18 @@ async function Main() {
                 while (firstAntinodeIsValid || secondAntinodeIsValid) {
                     if (grid[firstAntinode[0]]?.[firstAntinode[1]]) antinodeLocations.add(firstAntinode.join('|'))
                     if (grid[secondAntinode[0]]?.[secondAntinode[1]]) antinodeLocations.add(secondAntinode.join('|'))
+                    const [x3, y3] = firstAntinode
+                    const [x4, y4] = secondAntinode
                     firstAntinode = [
-                        firstAntinode[0] < secondAntinode[0] ? firstAntinode[0] - deltaX : firstAntinode[0] > secondAntinode[0] ? firstAntinode[0] + deltaX : firstAntinode[0],
-                        firstAntinode[1] < secondAntinode[1] ? firstAntinode[1] - deltaY : firstAntinode[1] > secondAntinode[1] ? firstAntinode[1] + deltaY : firstAntinode[1]
+                        x3 < x4 ? x3 - deltaX : x3 > x4 ? x3 + deltaX : x3,
+                        y3 < y4 ? y3 - deltaY : y3 > y4 ? y3 + deltaY : y3
                     ]
                     secondAntinode = [
-                        firstAntinode[0] < secondAntinode[0] ? secondAntinode[0] + deltaX : firstAntinode[0] > secondAntinode[0] ? secondAntinode[0] - deltaX : secondAntinode[0],
-                        firstAntinode[1] < secondAntinode[1] ? secondAntinode[1] + deltaY : firstAntinode[1] > secondAntinode[1] ? secondAntinode[1] - deltaY : secondAntinode[1]
+                        x3 < x4 ? x4 + deltaX : x3 > x4 ? x4 - deltaX : x4,
+                        y3 < y4 ? y4 + deltaY : y3 > y4 ? y4 - deltaY : y4
                     ]
-                    firstAntinodeIsValid = grid[firstAntinode[0]]?.[firstAntinode[1]] !== undefined
-                    secondAntinodeIsValid = grid[secondAntinode[0]]?.[secondAntinode[1]] !== undefined
+                    firstAntinodeIsValid = grid[x3]?.[y3] !== undefined
+                    secondAntinodeIsValid = grid[x4]?.[y4] !== undefined
                 }
             }
         }
