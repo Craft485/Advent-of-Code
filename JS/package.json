@@ -17,5 +17,8 @@
   "bugs": {
     "url": "https://github.com/Craft485/Advent-of-Code-2020-/issues"
   },
-  "homepage": "https://github.com/Craft485/Advent-of-Code-2020-#readme"
+  "homepage": "https://github.com/Craft485/Advent-of-Code-2020-#readme",
+  "devDependencies": {
+    "@types/node": "^24.10.1"
+  }
 }
