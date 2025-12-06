@@ -9,7 +9,7 @@ async function main() {
     for (const [lower, upper] of ranges) {
         let curr = lower
         while (curr <= upper) {
-            if (/^(\d*?)\1+$/.test(String(curr))) result += curr
+            if (/^(\d*)\1+$/.test(String(curr))) result += curr
             curr++
         }
     }
