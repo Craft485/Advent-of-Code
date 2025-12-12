@@ -1,0 +1,43 @@
+import { readFile } from 'node:fs/promises'
+
+const testcase = `.......S.......
+...............
+.......^.......
+...............
+......^.^......
+...............
+.....^.^.^.....
+...............
+....^.^...^....
+...............
+...^.^...^.^...
+...............
+..^...^.....^..
+...............
+.^.^.^.^.^...^.
+...............`
+
+async function main() {
+    const data = (await readFile('./input.txt', { encoding: 'utf-8' }))
+    const grid: ('.' | 'S' | '^')[][] = data.replace(/\r/g, '').trim().split('\n').map(line => line.split('')) as ('.' | 'S' | '^')[][]
+    let currentPositions: number[] = [ grid[0].findIndex(c => c === 'S') ]
+    let currY = 0
+    let splitCount = 0
+    while (currY < grid.length) {
+        const newPositions: number[] = []
+        for (let i = 0; i < currentPositions.length; i++) {
+            const currX = currentPositions[i]
+            if (grid[currY][currX] === '^') {
+                splitCount++
+                newPositions.push(...[currX - 1, currX + 1])
+                continue
+            }
+            newPositions.push(currX)
+        }
+        currentPositions = newPositions.filter((v, i, a) => a.indexOf(v) === i)
+        currY++
+    }
+    return splitCount
+}
+
+console.log(await main())
